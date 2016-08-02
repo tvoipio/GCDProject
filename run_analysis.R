@@ -94,5 +94,10 @@ names(activitysummary) <- c(names(activitysummary)[1:3], ave.col.names)
 
 activitysummary <- ungroup(activitysummary)
 
+# Write out the data
+setwd("..")
+write.table(activitydata, file = "activitydata.txt", row.names = FALSE)
+write.table(activitysummary, file = "activitysummary.txt", row.names = FALSE)
+
 # Cleanup
 setwd(origwd)

@@ -1,6 +1,6 @@
 # Code book
 
-This file describes the structure of the two dataframes produced by `run_analysis.R` and their relationship to the UCI HAR dataset ("original dataset"). For more information on the original dataset, see its accompanying `README.txt`.
+This file describes the structure of the two dataframes produced by `run_analysis.R` and their relationship to the UCI HAR dataset ("original dataset"). For more information on the original dataset, see its accompanying `README.txt`. The processed datasets are also available in the files `activitydata.txt` and `activitysummary.txt`.
 
 ## activitydata
 
@@ -82,7 +82,7 @@ The following features are included. For their descriptions, see `features_info.
 * fBodyBodyGyroJerkMag-mean()
 * fBodyBodyGyroJerkMag-std()
 
-## activitydatasummary
+## activitysummary
 
 Contains the means of the values of the 66 feature data columns in `activitydata` for each subject and physical activity and three classification data columns, total of 69 columns. 180 rows in total (30 subjects, 6 distinct activities).
 
