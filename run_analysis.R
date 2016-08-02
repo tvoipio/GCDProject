@@ -34,17 +34,22 @@ actlabels$activity <- factor(tolower(as.character(actlabels$activity)))
 features <- read.table("features.txt", col.names = c("feat.ID", "feat.name"),
                        stringsAsFactors = FALSE)
 
-# Feature IDs for means and standard deviations
+# Feature IDs for mean and standard deviation columns in the activity dat
 ext.feats <- features[grepl("std\\(\\)|mean\\(\\)", features$feat.name), "feat.ID"]
 
+# Construct a vector to be used with read.data
 feat.cols <- rep("NULL", nrow(features))
 feat.cols[ext.feats] <- "numeric"
 
+# Column names for the selected features, empty names for the columns which
+# are not to be imported from the data file
 feat.col.names <- rep("", nrow(features))
 col.names <- gsub("\\.+", "\\.",
                   make.names(features[ext.feats, "feat.name"]))
 col.names <- sub("\\.$", "", col.names)
 feat.col.names[ext.feats] <- col.names
+
+rm("features")
 
 datalist <- list()
 
@@ -58,14 +63,13 @@ for (datatype in c("test", "train"))
     featdata <- read.table(file.path(datatype, paste0("X", file.end)),
                            colClasses = feat.cols,
                            col.names = feat.col.names,
-                           #nrows = 10, # DEGUB
                            comment.char = "")
     
-    # Note to self: cbind converts strings to factors (see help), thus
+    # Note to self: cbind converts strings to factors (see ?cbind), thus
     # no need to explicitly convert "class" to a factor
     data <- cbind(subject, label, classification = rep(datatype, nrow(featdata)), featdata)
     
-    # Replace activity IDs with (factor) label
+    # Replace activity IDs with a (factor) label
     data <- merge(data, actlabels, by = "act.ID", sort = FALSE)
     data <- select(data, -act.ID)
     
@@ -82,10 +86,10 @@ rm("datalist")
 # Create a summarised data set with the means of each variable
 activitysummary <- activitydata %>%
     group_by(subject, activity, classification) %>%
-    summarize_at(feat.col.names[ext.feats], mean)
+    summarize_at(col.names, mean)
 
-ave.col.names <- paste0("ave.", col.names)
 # Change the column names to indicate that the data represent means
+ave.col.names <- paste0("ave.", col.names)
 names(activitysummary) <- c(names(activitysummary)[1:3], ave.col.names)
 
 activitysummary <- ungroup(activitysummary)
